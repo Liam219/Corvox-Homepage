@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Corvox — ¿Qué es y cómo funciona?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --navy:#0d2b5c;
+    --navy-deep:#081b3d;
+    --blue-btn:#1e3a5f;
+    --blue:#4361ee;
+    --orange:#f97316;
+    --orange2:#f4a024;
+    --sunset:#fb8b3f;
+    --green:#22c55e;
+    --purple:#7c3aed;
+    --red:#ef4444;
+    --light-bg:#f5f7fa;
+    --card-bg:#ffffff;
+    --border:#e2e8f0;
+    --text-dark:#1a202c;
+    --text-mid:#4a5568;
+    --text-muted:#718096;
+    --shadow-sm:0 1px 3px rgba(13,43,92,0.07);
+    --shadow-md:0 10px 26px rgba(13,43,92,0.10);
+    --shadow-lg:0 26px 60px rgba(13,43,92,0.18);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;font-family:'Poppins',sans-serif;color:var(--text-mid);
+    background:#ffffff;-webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'League Spartan',sans-serif;color:var(--navy);margin:0;letter-spacing:-0.01em;}
+  a{text-decoration:none;color:inherit;}
+  button{font-family:inherit;}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 32px;}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);}
+  :focus-visible{outline:2.5px solid var(--blue);outline-offset:3px;border-radius:6px;}
+  svg{display:block;}
+  .ic-svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;
+    border-radius:24px;padding:13px 26px;cursor:pointer;border:none;transition:transform .18s, box-shadow .18s;}
+  .btn-primary{background:var(--navy);color:#fff;box-shadow:0 10px 24px rgba(13,43,92,0.28);}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--border);}
+  .btn-outline:hover{border-color:var(--navy);transform:translateY(-2px);}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;} .reveal.d3{transition-delay:.24s;} .reveal.d4{transition-delay:.32s;}
+
+  /* ---------- NAV ---------- */
+  header.nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+  .nav-inner{max-width:1160px;margin:0 auto;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;font-family:'League Spartan',sans-serif;font-weight:700;font-size:21px;color:var(--text-dark);}
+  .logo img{height:38px;width:auto;display:block;}
+  .nav-links{display:flex;align-items:center;gap:28px;}
+  .nav-links a{font-size:13.5px;font-weight:600;color:var(--text-mid);transition:color .15s;}
+  .nav-links a:hover{color:var(--navy);}
+
+  /* ---------- HERO / SKYLINE ---------- */
+  .hero{position:relative;background:linear-gradient(180deg,var(--navy-deep) 0%,var(--navy) 46%,#7a3a1a 100%);color:#fff;overflow:hidden;padding:74px 0 0;}
+  .hero-inner{position:relative;z-index:3;max-width:1160px;margin:0 auto;padding:0 32px;}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.4);color:var(--orange2);font-size:12px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;padding:7px 14px;border-radius:20px;margin-bottom:22px;}
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--orange2);}
+  .hero h1{font-size:44px;line-height:1.08;font-weight:700;color:#fff;max-width:640px;}
+  .hero h1 span{color:var(--orange2);}
+  .hero p.lead{font-size:16px;line-height:1.7;color:#c3d1ec;max-width:480px;margin:20px 0 30px;}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .hero-actions .btn-primary{background:#fff;color:var(--navy);}
+
+  .skyline-stage{position:relative;height:340px;margin-top:36px;z-index:1;}
+  .skyline-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+  .skyline-photo-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(8,27,61,0.15) 0%, rgba(8,27,61,0.55) 55%, rgba(8,27,61,0.92) 100%), linear-gradient(90deg, rgba(8,27,61,0.55) 0%, rgba(8,27,61,0.05) 40%);}
+  .skyline-svg{position:absolute;bottom:0;left:0;width:100%;height:100%;}
+  .pin{transform-origin:center;}
+  .pin-dot{animation:pin-pulse 2.6s ease-in-out infinite;}
+  .pin-ring{animation:pin-ring 2.6s ease-out infinite;}
+  @keyframes pin-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.18);}}
+  @keyframes pin-ring{
+    0%{r:3;opacity:.65;}
+    100%{r:16;opacity:0;}
+  }
+  .stars circle{animation:twinkle 3.6s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15;}50%{opacity:.85;}}
+
+  .phone-float{position:absolute;right:6%;bottom:-18px;width:190px;z-index:4;filter:drop-shadow(0 24px 40px rgba(0,0,0,0.35));animation:float-y 5s ease-in-out infinite;}
+  @keyframes float-y{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+  /* neighborhood marquee ribbon */
+  .marquee-shell{background:var(--navy-deep);overflow:hidden;padding:13px 0;position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.08);}
+  .marquee-track{display:flex;width:max-content;gap:0;animation:scroll-left 32s linear infinite;}
+  .marquee-track span{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;letter-spacing:0.04em;color:#8fa3c9;padding:0 26px;white-space:nowrap;}
+  .marquee-track span b{color:var(--orange2);font-weight:700;}
+  .marquee-track span::after{content:"•";color:#3a4f78;margin-left:26px;}
+  @keyframes scroll-left{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion: reduce){.marquee-track{animation:none;}}
+
+  /* ---------- REAL PHOTO GALLERY ---------- */
+  .gallery-strip{background:var(--light-bg);border-bottom:1px solid var(--border);padding:56px 0;}
+  .gallery-head{max-width:560px;margin:0 auto 32px;text-align:center;}
+  .gallery-head h2{font-size:26px;margin-top:8px;}
+  .gallery-head p{font-size:14px;margin-top:10px;line-height:1.65;}
+  .gallery-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;}
+  .gallery-card{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-md);aspect-ratio:4/3;}
+  .gallery-grid .gallery-card:first-child{grid-row:span 1;aspect-ratio:auto;}
+  .gallery-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+  .gallery-card:hover img{transform:scale(1.06);}
+  .gallery-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 18px;background:linear-gradient(0deg, rgba(8,27,61,0.82), rgba(8,27,61,0));color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;}
+  .gallery-caption .ic-svg{width:14px;height:14px;color:var(--orange2);flex-shrink:0;}
+
+  /* ---------- TAB NAV ---------- */
+  .tabbar-shell{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:64px;z-index:50;box-shadow:0 2px 10px rgba(13,43,92,0.03);}
+  .tabbar{max-width:1160px;margin:0 auto;padding:0 32px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+  .tabbar::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    display:flex;align-items:center;gap:9px;white-space:nowrap;
+    background:transparent;border:none;padding:18px 18px;font-size:14px;font-weight:600;
+    color:var(--text-muted);cursor:pointer;position:relative;border-bottom:3px solid transparent;
+    transition:color .15s;
+  }
+  .tab-btn .ic-svg{width:18px;height:18px;color:currentColor;}
+  .tab-btn:hover{color:var(--navy);}
+  .tab-btn[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--orange);}
+
+  /* ---------- PANELS ---------- */
+  .panel{display:none;padding:64px 0 96px;}
+  .panel.active{display:block;animation:fadeUp .5s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  .panel-head{display:grid;grid-template-columns:1fr 0.85fr;gap:48px;align-items:center;margin-bottom:56px;}
+  .panel-head h2{font-size:32px;margin-top:10px;line-height:1.15;}
+  .panel-head p{font-size:15px;line-height:1.75;margin-top:14px;}
+  .panel-illustration{width:100%;height:auto;}
+
+  .answer-box{
+    background:var(--light-bg);border:1px solid var(--border);border-left:4px solid var(--orange);
+    border-radius:12px;padding:18px 20px;margin-top:20px;font-size:14px;color:var(--text-dark);font-weight:500;line-height:1.6;
+    display:flex;gap:10px;align-items:flex-start;
+  }
+  .answer-box .ic-svg{width:18px;height:18px;color:var(--orange);flex-shrink:0;margin-top:2px;}
+
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .info-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow-sm);transition:transform .18s, box-shadow .18s;}
+  .info-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+  .info-card .ic{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:14px;}
+  .info-card .ic .ic-svg{width:20px;height:20px;}
+  .info-card h4{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .info-card p{font-size:13px;line-height:1.6;margin:0;color:var(--text-muted);}
+
+  /* flow diagram */
+  .flow{display:flex;align-items:stretch;gap:0;margin:44px 0 8px;}
+  .flow-step{flex:1;text-align:center;padding:0 12px;position:relative;}
+  .flow-circle{width:56px;height:56px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:#fff;position:relative;z-index:2;box-shadow:0 8px 18px rgba(0,0,0,0.12);}
+  .flow-circle .ic-svg{width:24px;height:24px;}
+  .flow-line{position:absolute;top:28px;left:calc(50% + 28px);width:calc(100% - 56px);height:3px;background:var(--border);z-index:1;}
+  .flow-step:last-child .flow-line{display:none;}
+  .flow-step h4{font-size:14.5px;font-weight:700;margin-bottom:6px;}
+  .flow-step p{font-size:12.5px;color:var(--text-muted);margin:0;line-height:1.55;}
+
+  .cat-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:36px;}
+  .cat-pill{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:16px 10px;text-align:center;transition:border-color .18s, transform .18s;}
+  .cat-pill:hover{border-color:var(--blue-btn);transform:translateY(-2px);}
+  .cat-pill .ic{width:38px;height:38px;border-radius:19px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+  .cat-pill .ic .ic-svg{width:17px;height:17px;}
+  .cat-pill span{font-size:11.5px;font-weight:600;color:var(--text-dark);}
+
+  /* personas */
+  .persona-card{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .2s, box-shadow .2s;}
+  .persona-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+  .persona-top{padding:26px 22px 0;}
+  .persona-avatar{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .persona-avatar .ic-svg{width:24px;height:24px;}
+  .persona-card h4{font-size:16px;font-weight:700;margin-bottom:8px;}
+  .persona-card p{font-size:13px;line-height:1.65;color:var(--text-muted);padding:0 22px 26px;}
+
+  /* faq accordion */
+  .faq-list{max-width:760px;margin:0 auto;}
+  .faq-item{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff;}
+  .faq-q{
+    width:100%;text-align:left;padding:18px 20px;background:transparent;border:none;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:14.5px;font-weight:600;color:var(--text-dark);
+  }
+  .faq-q .chev{transition:transform .25s;color:var(--text-muted);flex-shrink:0;}
+  .faq-q .chev .ic-svg{width:16px;height:16px;}
+  .faq-item.open .faq-q .chev{transform:rotate(180deg);color:var(--orange);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .faq-a-inner{padding:0 20px 20px;font-size:13.5px;line-height:1.7;color:var(--text-muted);}
+  .faq-item.open .faq-a{max-height:240px;}
+
+  /* Panama section (dedicated city block inside "cómo funciona") */
+  .panama-strip{margin-top:60px;background:linear-gradient(135deg,var(--navy-deep),var(--navy) 60%,#5a3417);border-radius:22px;padding:40px;position:relative;overflow:hidden;color:#fff;}
+  .panama-strip .content{position:relative;z-index:2;max-width:420px;}
+  .panama-strip .eyebrow{color:var(--orange2);}
+  .panama-strip h3{color:#fff;font-size:22px;margin-top:8px;line-height:1.25;}
+  .panama-strip p{color:#b9c8e6;font-size:13.5px;margin-top:10px;line-height:1.65;}
+  .panama-strip .skyline-photo-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 40%;}
+  .panama-strip .skyline-photo-fade{position:absolute;inset:0;background:linear-gradient(90deg, rgba(8,27,61,0.96) 0%, rgba(8,27,61,0.75) 34%, rgba(13,43,92,0.15) 70%, rgba(90,52,23,0.1) 100%);}
+
+  /* CTA */
+  .cta-section{background:linear-gradient(120deg,var(--navy-deep),#132a52 55%,#0e356f);border-radius:26px;padding:56px 44px;text-align:center;color:#fff;position:relative;overflow:hidden;}
+  .cta-section::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%, rgba(249,115,22,0.16), transparent 55%);}
+  .cta-section h2{position:relative;color:#fff;font-size:28px;max-width:520px;margin:0 auto;line-height:1.2;}
+  .cta-section p{position:relative;color:#a9bcdf;font-size:14px;margin:14px auto 26px;max-width:440px;}
+  .cta-actions{position:relative;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .cta-actions .btn-primary{background:#fff;color:var(--navy);}
+  .cta-actions .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,0.4);}
+
+  footer{border-top:1px solid var(--border);padding:40px 0 26px;background:#fff;}
+  .footer-top{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .footer-top img{height:26px;width:auto;}
+  .footer-bottom{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-muted);flex-wrap:wrap;gap:10px;}
+
+  /* ---------- SHARE / QR ---------- */
+  .share-card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:36px;box-shadow:var(--shadow-md);
+    display:flex;align-items:center;gap:32px;flex-wrap:wrap;}
+  .share-text{flex:1;min-width:240px;}
+  .share-text h3{font-size:20px;margin-top:8px;}
+  .share-text p{font-size:13.5px;line-height:1.65;margin-top:8px;max-width:420px;}
+  .share-link-row{display:flex;align-items:center;gap:8px;margin-top:16px;background:var(--light-bg);border:1px solid var(--border);
+    border-radius:10px;padding:9px 12px;max-width:420px;}
+  .share-link-row input{border:none;background:transparent;font-family:inherit;font-size:12.5px;color:var(--text-mid);flex:1;min-width:0;outline:none;}
+  .share-copy-btn{flex-shrink:0;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
+  .share-copy-btn .ic-svg{width:13px;height:13px;}
+  .share-copy-btn.copied{background:var(--green);}
+  .qr-box{flex-shrink:0;background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow-sm);text-align:center;}
+  .qr-box #qrcode{width:132px;height:132px;}
+  .qr-box #qrcode img{border-radius:6px;}
+  .qr-box span{display:block;margin-top:8px;font-size:10.5px;font-weight:600;color:var(--text-muted);letter-spacing:0.04em;text-transform:uppercase;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:960px){
+    .hero h1{font-size:34px;}
+    .panel-head{grid-template-columns:1fr;}
+    .panel-illustration{max-width:340px;margin:0 auto;order:-1;}
+    .grid-3,.grid-4{grid-template-columns:repeat(2,1fr);}
+    .cat-strip{grid-template-columns:repeat(3,1fr);}
+    .flow{flex-direction:column;gap:24px;}
+    .flow-line{display:none;}
+    .phone-float{display:none;}
+    .nav-links{display:none;}
+    .panama-strip{padding:30px 24px;}
+    .panama-strip .content{max-width:none;}
+    .gallery-grid{grid-template-columns:1fr 1fr;}
+    .gallery-grid .gallery-card:first-child{grid-column:span 2;aspect-ratio:16/9;}
+  }
+  @media (max-width:600px){
+    .wrap,.nav-inner,.tabbar,.hero-inner{padding-left:18px;padding-right:18px;}
+    .hero h1{font-size:28px;}
+    .grid-3,.grid-4{grid-template-columns:1fr;}
+    .cat-strip{grid-template-columns:repeat(2,1fr);}
+    .cta-section{padding:36px 22px;}
+    .tabbar-shell{top:57px;}
+    .gallery-grid{grid-template-columns:1fr;}
+    .gallery-grid .gallery-card:first-child{grid-column:span 1;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .panel.active{animation:none;}
+    .btn,.info-card,.persona-card,.cat-pill,.phone-float,.pin-dot,.pin-ring,.stars circle{animation:none;transition:none;}
+    .reveal{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ICON SPRITE (no emoji anywhere) ============ -->
+<svg style="display:none">
+  <symbol id="ic-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6z"/></symbol>
+  <symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></symbol>
+  <symbol id="ic-handshake" viewBox="0 0 24 24"><path d="M2 12l4-4 4 3 3-3 3 2h6"/><path d="M9 11l3 3 3-3 2 2-4.5 4.5a2 2 0 01-2.8 0L6 13"/></symbol>
+  <symbol id="ic-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4v-4H4z"/></symbol>
+  <symbol id="ic-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.2"/></symbol>
+  <symbol id="ic-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 15.5h7M9 8.5h3"/></symbol>
+  <symbol id="ic-people" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3"/><circle cx="16" cy="9.5" r="2.4"/><path d="M3 20c0-3.3 2.5-5.5 5.5-5.5S14 16.7 14 20M14.5 20c0-2.6 1.7-4.5 4-4.5S22 17.6 22 20"/></symbol>
+  <symbol id="ic-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4.2L15.5 5.3a1.6 1.6 0 012.3 0l1 1a1.6 1.6 0 010 2.3L8.3 19 4 20z"/><path d="M13.5 7.3l3.2 3.2"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/></symbol>
+  <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 00-5.6 4.9L3 17.3l3.7 3.7 6.1-6.1a4 4 0 004.9-5.6l-2.8 2.8-2.1-2.1z"/></symbol>
+  <symbol id="ic-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></symbol>
+  <symbol id="ic-pothole" viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="7" ry="3.4"/><path d="M12 4v5M12 6.2l-2 1.6M12 6.2l2 1.6"/></symbol>
+  <symbol id="ic-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.4 10.9c.6.44.9 1 .9 1.6h5c0-.6.3-1.16.9-1.6A6 6 0 0012 3z"/></symbol>
+  <symbol id="ic-drop" viewBox="0 0 24 24"><path d="M12 3s6 7 6 11.2A6 6 0 016 14.2C6 10 12 3 12 3z"/></symbol>
+  <symbol id="ic-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 5-3 7.5-7 9-4-1.5-7-4-7-9V6z"/></symbol>
+  <symbol id="ic-dots" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></symbol>
+  <symbol id="ic-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="ic-building" viewBox="0 0 24 24"><path d="M5 21V5l7-2 7 2v16"/><path d="M5 21h14M9 9h.01M9 13h.01M15 9h.01M15 13h.01M9 21v-4h6v4"/></symbol>
+  <symbol id="ic-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></symbol>
+  <symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s7-7.2 7-12a7 7 0 10-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></symbol>
+  <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+</svg>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo"><img src="images/corvox-logo.png" alt="Corvox"></a>
+    <nav class="nav-links">
+      <a href="#tab-que-es" onclick="selectTab('que-es')">Qué es</a>
+      <a href="#tab-como-funciona" onclick="selectTab('como-funciona')">Cómo funciona</a>
+      <a href="#tab-a-quienes" onclick="selectTab('a-quienes')">A quiénes ayuda</a>
+      <a href="#tab-faq" onclick="selectTab('faq')">Preguntas</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="dot"></span> Guía rápida de la plataforma</div>
+    <h1>Ciudad de Panamá, <span>caso por caso, resuelto en comunidad.</span></h1>
+    <p class="lead">Todo lo que necesitas saber en cuatro pestañas: qué es Corvox, cómo funciona, a quién ayuda y las dudas más comunes. Sin manuales largos, solo lo esencial.</p>
+    <div class="hero-actions">
+      <a href="#tab-que-es" class="btn btn-primary" onclick="selectTab('que-es')">
+        <svg class="ic-svg" style="width:16px;height:16px"><use href="#ic-compass"/></svg>
+        Empezar por "¿Qué es?"
+      </a>
+    </div>
+  </div>
+
+  <div class="skyline-stage">
+    <img class="skyline-photo" src="images/panama-cinta-costera.jpg" alt="Vista aérea de la Cinta Costera, Ciudad de Panamá">
+    <div class="skyline-photo-overlay"></div>
+    <svg class="skyline-svg" viewBox="0 0 1200 360" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <g class="stars">
+        <circle cx="90" cy="40" r="1.6" fill="#fff"/>
+        <circle cx="220" cy="70" r="1.2" fill="#fff"/>
+        <circle cx="340" cy="30" r="1.4" fill="#fff"/>
+        <circle cx="480" cy="55" r="1.1" fill="#fff"/>
+        <circle cx="150" cy="100" r="1" fill="#fff"/>
+        <circle cx="1000" cy="45" r="1.4" fill="#fff"/>
+        <circle cx="1100" cy="80" r="1.1" fill="#fff"/>
+      </g>
+
+      <!-- report pins pulsing over the real photo -->
+      <g class="pin" transform="translate(400,168)">
+        <circle class="pin-ring" cx="0" cy="0" r="3" fill="none" stroke="#f97316" stroke-width="2"/>
+        <circle class="pin-dot" cx="0" cy="0" r="4.5" fill="#f97316"/>
+      </g>
+      <g class="pin" transform="translate(613,110)" style="animation-delay:.6s">
+        <circle class="pin-ring" cx="0" cy="0" r="3" fill="none" stroke="#f4a024" stroke-width="2" style="animation-delay:.6s"/>
+        <circle class="pin-dot" cx="0" cy="0" r="4.5" fill="#f4a024" style="animation-delay:.6s"/>
+      </g>
+      <g class="pin" transform="translate(760,205)" style="animation-delay:1.2s">
+        <circle class="pin-ring" cx="0" cy="0" r="3" fill="none" stroke="#22c55e" stroke-width="2" style="animation-delay:1.2s"/>
+        <circle class="pin-dot" cx="0" cy="0" r="4.5" fill="#22c55e" style="animation-delay:1.2s"/>
+      </g>
+      <g class="pin" transform="translate(860,182)" style="animation-delay:1.8s">
+        <circle class="pin-ring" cx="0" cy="0" r="3" fill="none" stroke="#f97316" stroke-width="2" style="animation-delay:1.8s"/>
+        <circle class="pin-dot" cx="0" cy="0" r="4.5" fill="#f97316" style="animation-delay:1.8s"/>
+      </g>
+    </svg>
+
+    <svg class="phone-float" viewBox="0 0 140 220" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="140" height="220" rx="24" fill="#ffffff"/>
+      <rect x="0" y="0" width="140" height="220" rx="24" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="14" y="20" width="112" height="60" rx="10" fill="#eef4ff"/>
+      <circle cx="70" cy="50" r="16" fill="#4361ee"/>
+      <path d="M63 50l5 5 10-10" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="14" y="92" width="112" height="10" rx="5" fill="#e2e8f0"/>
+      <rect x="14" y="110" width="80" height="9" rx="4.5" fill="#eef1f6"/>
+      <rect x="14" y="130" width="112" height="30" rx="9" fill="#0d2b5c"/>
+      <text x="70" y="149" text-anchor="middle" font-family="Poppins" font-size="10" font-weight="600" fill="#ffffff">Reportar ahora</text>
+      <rect x="14" y="168" width="112" height="17" rx="8.5" fill="#fff7ed"/>
+      <text x="70" y="179.5" text-anchor="middle" font-family="Poppins" font-size="8" font-weight="700" fill="#d97706">+50 VP GANADOS</text>
+    </svg>
+  </div>
+
+  <div class="marquee-shell">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+</section>
+
+<section class="gallery-strip">
+  <div class="wrap">
+    <div class="gallery-head reveal">
+      <span class="eyebrow">La ciudad real</span>
+      <h2>El mismo horizonte que ves desde tu ventana</h2>
+      <p>Sin ilustraciones esta vez — este es el escenario real donde va a operar el proyecto.</p>
+    </div>
+    <div class="gallery-grid">
+      <a class="gallery-card reveal" href="#tab-como-funciona" onclick="selectTab('como-funciona')">
+        <img src="images/panama-cinta-costera.jpg" alt="Cinta Costera, Ciudad de Panamá">
+        <div class="gallery-caption"><svg class="ic-svg"><use href="#ic-pin"/></svg> Cinta Costera</div>
+      </a>
+      <a class="gallery-card reveal d1" href="#tab-como-funciona" onclick="selectTab('como-funciona')">
+        <img src="images/panama-skyline-1.jpg" alt="Distrito financiero, Ciudad de Panamá">
+        <div class="gallery-caption"><svg class="ic-svg"><use href="#ic-pin"/></svg> Distrito financiero</div>
+      </a>
+      <a class="gallery-card reveal d2" href="#tab-como-funciona" onclick="selectTab('como-funciona')">
+        <img src="images/panama-punta-pacifica.jpg" alt="Punta Pacífica, Ciudad de Panamá">
+        <div class="gallery-caption"><svg class="ic-svg"><use href="#ic-pin"/></svg> Punta Pacífica</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="tabbar-shell">
+  <div class="tabbar" role="tablist" aria-label="Secciones sobre Corvox">
+    <button class="tab-btn" role="tab" data-tab="que-es" onclick="selectTab('que-es')"><svg class="ic-svg"><use href="#ic-compass"/></svg> ¿Qué es Corvox?</button>
+    <button class="tab-btn" role="tab" data-tab="como-funciona" onclick="selectTab('como-funciona')"><svg class="ic-svg"><use href="#ic-gear"/></svg> ¿Cómo funciona?</button>
+    <button class="tab-btn" role="tab" data-tab="a-quienes" onclick="selectTab('a-quienes')"><svg class="ic-svg"><use href="#ic-handshake"/></svg> ¿A quiénes ayuda?</button>
+    <button class="tab-btn" role="tab" data-tab="faq" onclick="selectTab('faq')"><svg class="ic-svg"><use href="#ic-chat"/></svg> Preguntas frecuentes</button>
+  </div>
+</div>
+
+<!-- ================= TAB 1: QUÉ ES ================= -->
+<section id="tab-que-es" class="panel" data-panel="que-es">
+  <div class="wrap">
+    <div class="panel-head">
+      <div class="reveal">
+        <span class="eyebrow">La idea en corto</span>
+        <h2>Corvox es el lugar donde tu barrio queda registrado</h2>
+        <p>Es una plataforma de participación ciudadana: reportas un problema urbano —un bache, un poste sin luz, una fuga— con foto y ubicación exacta, y ese reporte queda visible, con seguimiento y con una comunidad que puede sumarse a él.</p>
+        <div class="answer-box">
+          <svg class="ic-svg"><use href="#ic-pin"/></svg>
+          <span>En una frase: Corvox convierte "lo vi y nadie hizo nada" en un caso con estado, historial y comunidad detrás.</span>
+        </div>
+      </div>
+      <svg class="panel-illustration reveal d1" viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="190" cy="160" r="150" fill="#eef4ff"/>
+        <rect x="70" y="70" width="240" height="180" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+        <rect x="70" y="70" width="240" height="40" rx="18" fill="#0d2b5c"/>
+        <circle cx="92" cy="90" r="5" fill="#f97316"/>
+        <circle cx="108" cy="90" r="5" fill="#f4a024"/>
+        <circle cx="124" cy="90" r="5" fill="#22c55e"/>
+        <rect x="90" y="126" width="200" height="16" rx="8" fill="#e2e8f0"/>
+        <rect x="90" y="152" width="140" height="12" rx="6" fill="#eef1f6"/>
+        <rect x="90" y="178" width="200" height="58" rx="12" fill="#f5f7fa" stroke="#e2e8f0"/>
+        <circle cx="118" cy="207" r="16" fill="#f97316"/>
+        <path d="M110 207a8 8 0 1 1 16 0c0 6-8 12-8 12s-8-6-8-12z" fill="#ffffff"/>
+        <rect x="146" y="197" width="120" height="9" rx="4.5" fill="#e2e8f0"/>
+        <rect x="146" y="213" width="80" height="8" rx="4" fill="#eef1f6"/>
+        <circle cx="300" cy="80" r="26" fill="#22c55e"/>
+        <path d="M290 80l7 7 14 -14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="grid-3">
+      <div class="info-card reveal">
+        <div class="ic" style="background:#e0f2fe;color:#0369a1;"><svg class="ic-svg"><use href="#ic-camera"/></svg></div>
+        <h4>Reporte con evidencia</h4>
+        <p>Cada caso incluye foto, categoría y ubicación en el mapa — no descripciones sueltas.</p>
+      </div>
+      <div class="info-card reveal d1">
+        <div class="ic" style="background:#dcfce7;color:#15803d;"><svg class="ic-svg"><use href="#ic-doc"/></svg></div>
+        <h4>Registro público</h4>
+        <p>El historial del caso queda visible: cuándo se abrió, en qué va y cuándo se resolvió.</p>
+      </div>
+      <div class="info-card reveal d2">
+        <div class="ic" style="background:#ede9fe;color:#6d28d9;"><svg class="ic-svg"><use href="#ic-people"/></svg></div>
+        <h4>Comunidad, no solo trámite</h4>
+        <p>Vecinos pueden apoyar, comentar y discutir cada reporte en el foro por categoría.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAB 2: CÓMO FUNCIONA ================= -->
+<section id="tab-como-funciona" class="panel" data-panel="como-funciona">
+  <div class="wrap">
+    <div class="panel-head">
+      <div class="reveal">
+        <span class="eyebrow">El recorrido de un reporte</span>
+        <h2>Tres pasos, un estado siempre visible</h2>
+        <p>Desde el momento en que reportas algo hasta que se resuelve, el caso avanza por un mismo camino — así cualquier vecino sabe, de un vistazo, qué tan cerca está de cerrarse.</p>
+        <div class="answer-box">
+          <svg class="ic-svg"><use href="#ic-bolt"/></svg>
+          <span>En una frase: eliges categoría, marcas el punto en el mapa, subes una foto — y desde ahí sigues el progreso como una línea de tiempo.</span>
+        </div>
+      </div>
+      <svg class="panel-illustration reveal d1" viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="190" cy="160" r="150" fill="#fff7ed"/>
+        <path d="M90 220 Q190 100 290 220" stroke="#f4a024" stroke-width="4" fill="none" stroke-dasharray="2 10" stroke-linecap="round"/>
+        <circle cx="90" cy="220" r="24" fill="#f97316"/>
+        <text x="90" y="226" text-anchor="middle" font-family="Poppins" font-size="14" font-weight="700" fill="#fff">1</text>
+        <circle cx="190" cy="140" r="24" fill="#4361ee"/>
+        <text x="190" y="146" text-anchor="middle" font-family="Poppins" font-size="14" font-weight="700" fill="#fff">2</text>
+        <circle cx="290" cy="220" r="24" fill="#22c55e"/>
+        <path d="M280 220l7 7 14 -14" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="55" y="252" width="70" height="20" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+        <text x="90" y="266" text-anchor="middle" font-family="Poppins" font-size="9" font-weight="600" fill="#1a202c">Reportar</text>
+        <rect x="155" y="172" width="70" height="20" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+        <text x="190" y="186" text-anchor="middle" font-family="Poppins" font-size="9" font-weight="600" fill="#1a202c">En progreso</text>
+        <rect x="255" y="252" width="70" height="20" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+        <text x="290" y="266" text-anchor="middle" font-family="Poppins" font-size="9" font-weight="600" fill="#1a202c">Resuelto</text>
+      </svg>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step reveal">
+        <div class="flow-circle" style="background:#d97706;"><svg class="ic-svg"><use href="#ic-pencil"/></svg></div>
+        <div class="flow-line"></div>
+        <h4>Pendiente</h4>
+        <p>El reporte se recibe y queda en cola para revisión.</p>
+      </div>
+      <div class="flow-step reveal d1">
+        <div class="flow-circle" style="background:#4361ee;"><svg class="ic-svg"><use href="#ic-search"/></svg></div>
+        <div class="flow-line"></div>
+        <h4>Bajo revisión</h4>
+        <p>El equipo evalúa el caso antes de comenzar el trabajo.</p>
+      </div>
+      <div class="flow-step reveal d2">
+        <div class="flow-circle" style="background:#f97316;"><svg class="ic-svg"><use href="#ic-wrench"/></svg></div>
+        <div class="flow-line"></div>
+        <h4>En progreso</h4>
+        <p>El trabajo para resolver el problema ya está activo.</p>
+      </div>
+      <div class="flow-step reveal d3">
+        <div class="flow-circle" style="background:#22c55e;"><svg class="ic-svg"><use href="#ic-check-circle"/></svg></div>
+        <h4>Resuelto</h4>
+        <p>El caso se marca como completado y queda como registro.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:56px;font-size:20px;">Seis categorías, un mismo estándar</h3>
+    <p style="font-size:13.5px;max-width:520px;margin-top:8px;">Cada tipo de reporte tiene su propio color e ícono en toda la plataforma, para reconocerlo de un vistazo.</p>
+    <div class="cat-strip">
+      <div class="cat-pill reveal"><div class="ic" style="background:#fff3cd;color:#b45309;"><svg class="ic-svg"><use href="#ic-pothole"/></svg></div><span>Baches</span></div>
+      <div class="cat-pill reveal d1"><div class="ic" style="background:#fffbeb;color:#b45309;"><svg class="ic-svg"><use href="#ic-bulb"/></svg></div><span>Alumbrado</span></div>
+      <div class="cat-pill reveal d2"><div class="ic" style="background:#ebf8ff;color:#0369a1;"><svg class="ic-svg"><use href="#ic-drop"/></svg></div><span>Fugas de agua</span></div>
+      <div class="cat-pill reveal d3"><div class="ic" style="background:#f0fff4;color:#15803d;"><svg class="ic-svg"><use href="#ic-trash"/></svg></div><span>Basura</span></div>
+      <div class="cat-pill reveal d4"><div class="ic" style="background:#fff5f5;color:#c53030;"><svg class="ic-svg"><use href="#ic-shield"/></svg></div><span>Seguridad</span></div>
+      <div class="cat-pill reveal"><div class="ic" style="background:#f7fafc;color:#4a5568;"><svg class="ic-svg"><use href="#ic-dots"/></svg></div><span>Otros</span></div>
+    </div>
+
+    <div class="panama-strip reveal">
+      <img class="skyline-photo-bg" src="images/panama-skyline-1.jpg" alt="Distrito financiero, Ciudad de Panamá">
+      <div class="skyline-photo-fade"></div>
+      <div class="content">
+        <span class="eyebrow">Corvox en tu ciudad</span>
+        <h3>Cada pin en el mapa sería una calle real de Panamá</h3>
+        <p>De Casco Viejo a Costa del Este, la idea es que cada reporte se ubique con precisión sobre el mapa de la ciudad — nada de direcciones aproximadas o "por ahí cerca del parque".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAB 3: A QUIÉNES AYUDA ================= -->
+<section id="tab-a-quienes" class="panel" data-panel="a-quienes">
+  <div class="wrap">
+    <div class="panel-head">
+      <div class="reveal">
+        <span class="eyebrow">Tres perfiles, un mismo objetivo</span>
+        <h2>Corvox no es solo para quien reporta</h2>
+        <p>La plataforma conecta a distintas personas alrededor del mismo problema: quien lo ve primero, quien puede resolverlo y quien vive cerca y quiere estar al tanto.</p>
+        <div class="answer-box">
+          <svg class="ic-svg"><use href="#ic-handshake"/></svg>
+          <span>En una frase: ayuda a vecinos, a equipos de mantenimiento/gobierno local y a comunidades enteras a coordinarse sobre el mismo caso.</span>
+        </div>
+      </div>
+      <svg class="panel-illustration reveal d1" viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="190" cy="160" r="150" fill="#f5f3ff"/>
+        <circle cx="130" cy="130" r="34" fill="#c084fc"/>
+        <circle cx="130" cy="118" r="14" fill="#fff"/>
+        <path d="M104 158c0-16 12-24 26-24s26 8 26 24" fill="#fff"/>
+        <circle cx="250" cy="120" r="30" fill="#60a5fa"/>
+        <circle cx="250" cy="110" r="12" fill="#fff"/>
+        <path d="M228 146c0-14 10-20 22-20s22 6 22 20" fill="#fff"/>
+        <circle cx="190" cy="220" r="38" fill="#34d399"/>
+        <circle cx="190" cy="207" r="15" fill="#fff"/>
+        <path d="M162 250c0-17 13-26 28-26s28 9 28 26" fill="#fff"/>
+        <path d="M130 130 L190 220 L250 120" stroke="#0d2b5c" stroke-width="2" stroke-dasharray="3 7" opacity="0.35" fill="none"/>
+      </svg>
+    </div>
+
+    <div class="grid-3">
+      <div class="persona-card reveal">
+        <div class="persona-top">
+          <div class="persona-avatar" style="background:#f5f3ff;color:#7c3aed;"><svg class="ic-svg"><use href="#ic-person"/></svg></div>
+          <h4>Vecinos y vecinas</h4>
+        </div>
+        <p>Reportan lo que ven en su camino diario y siguen el estado de sus casos y los de otros vecinos.</p>
+      </div>
+      <div class="persona-card reveal d1">
+        <div class="persona-top">
+          <div class="persona-avatar" style="background:#eff6ff;color:#2563eb;"><svg class="ic-svg"><use href="#ic-wrench"/></svg></div>
+          <h4>Equipos de mantenimiento</h4>
+        </div>
+        <p>Reciben casos ya ubicados, categorizados y con foto — sin tener que reconstruir el problema desde cero por teléfono.</p>
+      </div>
+      <div class="persona-card reveal d2">
+        <div class="persona-top">
+          <div class="persona-avatar" style="background:#ecfdf5;color:#059669;"><svg class="ic-svg"><use href="#ic-building"/></svg></div>
+          <h4>La comunidad en general</h4>
+        </div>
+        <p>Sigue el pulso de su zona en el foro, se organiza para causas comunes y descubre qué tan activo está su vecindario.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAB 4: FAQ ================= -->
+<section id="tab-faq" class="panel" data-panel="faq">
+  <div class="wrap">
+    <div class="panel-head reveal" style="margin-bottom:40px;">
+      <div>
+        <span class="eyebrow">Antes de empezar</span>
+        <h2>Preguntas rápidas, respuestas directas</h2>
+        <p>Lo que la mayoría pregunta antes de crear su primer reporte.</p>
+      </div>
+      <svg class="panel-illustration" viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="190" cy="160" r="150" fill="#eef4ff"/>
+        <rect x="90" y="90" width="200" height="120" rx="20" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+        <path d="M150 210l-20 30 40-14z" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="190" y="150" text-anchor="middle" font-family="Poppins" font-size="34" font-weight="800" fill="#4361ee">?</text>
+        <circle cx="128" cy="120" r="9" fill="#f97316"/>
+        <circle cx="252" cy="180" r="9" fill="#22c55e"/>
+      </svg>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Necesito una cuenta para reportar algo? <span class="chev"><svg class="ic-svg"><use href="#ic-chevron"/></svg></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Puedes explorar el foro y los reportes de tu zona como invitado, pero para crear un reporte, comentar o sumar apoyo necesitas una cuenta — así se puede dar seguimiento real al caso.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa con mi reporte después de enviarlo? <span class="chev"><svg class="ic-svg"><use href="#ic-chevron"/></svg></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Queda visible en "Mis reportes" con su línea de tiempo: pendiente, bajo revisión, en progreso y resuelto. Recibes notificaciones cada vez que cambia de estado.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Puedo ver los reportes de otras personas? <span class="chev"><svg class="ic-svg"><use href="#ic-chevron"/></svg></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sí. Los reportes son parte de un registro comunitario visible para todos, y puedes apoyarlos o comentarlos desde el foro por categoría.</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cómo gano Voxis Coins o puntos de comunidad? <span class="chev"><svg class="ic-svg"><use href="#ic-chevron"/></svg></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Sumas puntos cuando un reporte tuyo se verifica o resuelve, cuando ayudas en el foro, o por participación constante — se reflejan en tu perfil junto a insignias como "First Reporter".</div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Corvox reemplaza a mi municipalidad? <span class="chev"><svg class="ic-svg"><use href="#ic-chevron"/></svg></span></button>
+        <div class="faq-a"><div class="faq-a-inner">No — Corvox organiza y visibiliza el reporte para que sea más fácil de atender y de seguir, pero es la comunidad y los equipos responsables quienes resuelven cada caso.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:100px;">
+  <div class="cta-section reveal">
+    <h2>¿Listo para reportar tu primer caso?</h2>
+    <p>Toma menos de dos minutos y tu reporte ya queda con seguimiento, comunidad y estado visible.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn btn-primary">Crear una cuenta</a>
+      <a href="#" class="btn btn-outline">Explorar el foro</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:60px;">
+  <div class="share-card reveal">
+    <div class="share-text">
+      <span class="eyebrow">Compartir</span>
+      <h3>Cualquiera puede abrir esta guía escaneando el código</h3>
+      <p>El QR y el link de abajo apuntan siempre a esta misma página — perfecto para pegarlo en un volante, un grupo de WhatsApp del barrio o una reunión comunitaria.</p>
+      <div class="share-link-row">
+        <input id="shareUrl" type="text" readonly>
+        <button class="share-copy-btn" id="copyBtn" onclick="copyShareLink()">
+          <svg class="ic-svg"><use href="#ic-doc"/></svg> Copiar
+        </button>
+      </div>
+    </div>
+    <div class="qr-box">
+      <div id="qrcode"></div>
+      <span>Escanéame</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top"><img src="images/corvox-logo.png" alt="Corvox"></div>
+    <div class="footer-bottom">
+      <span>© 2025 Corvox. Empoderando la participación ciudadana.</span>
+      <span>Hecho para vecindarios que sí se organizan — Ciudad de Panamá.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function selectTab(name){
+    document.querySelectorAll('.tab-btn').forEach(b=>{
+      const on = b.dataset.tab === name;
+      b.setAttribute('aria-selected', on ? 'true':'false');
+    });
+    document.querySelectorAll('.panel').forEach(p=>{
+      p.classList.toggle('active', p.dataset.panel === name);
+    });
+    document.querySelectorAll('.panel.active .reveal').forEach(el=>el.classList.add('in'));
+    const shell = document.querySelector('.tabbar-shell');
+    window.scrollTo({top: shell.offsetTop - 64, behavior:'smooth'});
+  }
+  selectTab('que-es');
+
+  function toggleFaq(btn){
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  }
+
+  // scroll reveal for elements outside the initial tab
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // neighborhood marquee
+  const barrios = ["Casco Viejo","Bella Vista","San Francisco","El Cangrejo","Costa del Este","Colón","Obarrio","Punta Pacífica","Ancón","Betania"];
+  const track = document.getElementById('marqueeTrack');
+  const list = [...barrios, ...barrios].map(b=>`<span><svg class="ic-svg" style="width:12px;height:12px"><use href="#ic-pin"/></svg> <b>${b}</b></span>`).join('');
+  track.innerHTML = list + list;
+
+  // share link + QR (always points to wherever this page is currently hosted)
+  const shareUrl = window.location.href;
+  document.getElementById('shareUrl').value = shareUrl;
+
+  function copyShareLink(){
+    const input = document.getElementById('shareUrl');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(shareUrl).catch(()=>{ document.execCommand('copy'); });
+    const btn = document.getElementById('copyBtn');
+    const original = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg class="ic-svg"><use href="#ic-check-circle"/></svg> Copiado';
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML = original; }, 1800);
+  }
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: shareUrl,
+    width: 132,
+    height: 132,
+    colorDark: "#0d2b5c",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+
+</body>
+</html>
